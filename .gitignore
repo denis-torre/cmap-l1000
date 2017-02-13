@@ -3,3 +3,4 @@
 *.dir
 *.sublime-project
 *.sublime-workspace
+*.sqlite

@@ -11,6 +11,7 @@
 ########## 1. Load libraries
 #############################################
 ##### 1. Python modules #####
+import sys
 
 ##### 2. Custom modules #####
 # Pipeline running
