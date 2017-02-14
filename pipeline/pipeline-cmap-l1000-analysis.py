@@ -101,14 +101,38 @@ def mergeGeneAnnotations(infiles, outfile):
 
 #######################################################
 #######################################################
-########## S. 
+########## S2. PCA Analysis
 #######################################################
 #######################################################
 
 #############################################
-########## . 
+########## 1. Run PCA
 #############################################
 
+@follows(mkdir('f2-pca.dir'))
+
+@transform(mergeExpressionData,
+		   regex(r'.*/(.*)-expression_data.txt'),
+		   r'f2-pca.dir/\1-pca.rda')
+
+def runPca(infile, outfile):
+
+	# Run function
+	r.run_pca(infile, outfile)
+
+#############################################
+########## 2. Celltype PCA 
+#############################################
+
+@transform(mergeExpressionData,
+		   regex(r'.*/(.*)-expression_data.txt'),
+		   add_inputs(mergeSampleAnnotations),
+		   r'f2-pca.dir/\1-celltype_pca.rda')
+
+def runCelltypePca(infiles, outfile):
+
+	# Run function
+	r.run_celltype_pca(list(infiles), outfile)
 
 ##################################################
 ##################################################
