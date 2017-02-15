@@ -134,6 +134,55 @@ def runCelltypePca(infiles, outfile):
 	# Run function
 	r.run_celltype_pca(list(infiles), outfile)
 
+#######################################################
+#######################################################
+########## S3. Prepare Plotly Tables
+#######################################################
+#######################################################
+
+#############################################
+########## 1. Add sample annotations
+#############################################
+
+@follows(mkdir('f3-plotly_data.dir'))
+
+@transform(mergeSampleAnnotations,
+		   regex(r'.*/(.*)-sample_annotations.txt'),
+		   r'f3-plotly_data.dir/\1-sample_annotations_processed.txt')
+
+def processSampleAnnotations(infile, outfile):
+
+	# Run function
+	r.process_sample_annotations(infile, outfile)
+
+#############################################
+########## 2. Prepare PCA dataframe
+#############################################
+
+@transform(runPca,
+		   regex(r'.*/(.*)-pca.rda'),
+		   add_inputs(processSampleAnnotations),
+		   r'f3-plotly_data.dir/\1-pca.txt')
+
+def preparePcaDataframe(infiles, outfile):
+
+	# Run function
+	r.prepare_pca_dataframe(list(infiles), outfile)
+
+#############################################
+########## 3. Prepare celltype PCA dataframe
+#############################################
+
+@transform(runCelltypePca,
+		   regex(r'.*/(.*)-celltype_pca.rda'),
+		   add_inputs(processSampleAnnotations),
+		   r'f3-plotly_data.dir/\1-celltype_pca.txt')
+
+def prepareCelltypePcaDataframe(infiles, outfile):
+
+	# Run function
+	r.prepare_celltype_pca_dataframe(list(infiles), outfile)
+
 ##################################################
 ##################################################
 ########## Run pipeline
